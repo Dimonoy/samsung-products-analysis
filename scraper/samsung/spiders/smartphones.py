@@ -51,6 +51,8 @@ class SmartphonesSpider(scrapy.Spider):
                     coupon_discount_quantity = extract_quantity(price_block)
                 case "쿠폰 적용 예상가":
                     coupon_discounted_price = extract_quantity(price_block)
+                case other:
+                    self.logger.warn(f"'{other}' is not defined by the parser")
 
         return {
             "title": response.css("#goodsDetailNm::text").get(),
