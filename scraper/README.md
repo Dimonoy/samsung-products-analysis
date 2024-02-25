@@ -6,6 +6,7 @@
 * Model - the concrete model of the product
 * Item category - the product type
 * Standard price - the original price of the product
+* Currency - the currency of the prices of the product
 * Member price - the price of the product under the condition of ordering the product from the samsung.com
 * Discount quantity - the discount in the currency. Applied torwards the standard price
 * Benefit price - the price with the temporary discount under the same condition as for the member price. Applied torwards the standard price
@@ -13,7 +14,7 @@
 * Coupon discount quantity - the coupon discount in the currency. 
 * Coupon discount period - the period of validity of the coupon 
 * Price with coupon discount - the price with the coupon discount under the same condition as for the member price. Applied torwards standard price or the benefit price if the latter is presented
-* Event price - the outlet price under the same condition as for member price. Applied torwards the standard price
+* Outlet special price - the outlet price under the same condition as for member price. Applied torwards the standard price
 * Color - the color of the product
 * Rating - the 0 to 5 rating of the product
 * Quantity of reviews - the amount of feedbacks from the purchases
