@@ -27,17 +27,36 @@ class SmartphonesSpider(scrapy.Spider):
 
     def parse_card(self, response: scrapy.http.Response):
         item = None
-        standard_price = None
-        currency = None
-        member_price = None
-        benefit_price = None
-        outlet_special_price = None
-        coupon_discount_quantity = None
-        coupon_discount_price = None
+        prices_selector = response.css("itm-price")
+        props_selector = response.css("itm-option-choice")
 
+        return {
+            "title": response.css("#goodsDetailNm::text").get(),
+            "model": response.css("div.itm-sku::text").get(),
+            "category": self.name,
+
+            "benefit_price_validity_period": response.css().get(),
+            "coupon_discount_validity_period": response.css().get(),
+
+            "rating": response.css("itm-sart-rating span::text").get(),
+            "quantity_of_reviews": response.css("itm-review-count::text").get(),
+            **self.parse_prices(prices_selector),
+            **self.parse_additional_props(props_selector),
+        }
+
+    def parse_prices(prices_selector: scrapy.Selector):
+        prices = {
+            "standard_price": None,
+            "member_price": None,
+            "benefit_price": None,
+            "outlet_special_price": None,
+            "coupon_discount_quantity": None,
+            "coupon_discounted_price": None,
+            "currency": None,
+        }
         extract_quantity = lambda pb: pb.css("dd span::text").get().strip()
 
-        for price_block in response.css("itm-price dl").getall():
+        for price_block in prices_selector.css("dl").getall():
             match price_block.css("dt::text").get().strip():
                 case "기준가":
                     standard_price = extract_quantity(price_block)
