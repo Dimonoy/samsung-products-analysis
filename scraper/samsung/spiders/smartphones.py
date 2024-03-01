@@ -73,21 +73,5 @@ class SmartphonesSpider(scrapy.Spider):
                 case other:
                     self.logger.warn(f"'{other}' is not defined by the parser")
 
-        return {
-            "title": response.css("#goodsDetailNm::text").get(),
-            "model": response.css("div.itm-sku::text").get(),
-            "category": self.name,
-            "standard_price": standard_price,
-            "currency": currency,
-            "member_price": member_price,
-            "discount_quantity": response.css().get(),
-            "benefit_price": benefit_price,
-            "benefit_price_validity_period": response.css().get(),
-            "coupon_discount_quantity": coupon_discount_quantity,
-            "coupon_discount_period": response.css().get(),
-            "coupon_discounted_price": coupon_discount_price,
-            "outlet_special_price": outlet_special_price,
-            "rating": response.css("itm-sart-rating span::text").get(),
-            "quantity_of_reviews": response.css("itm-review-count::text").get(),
-            "additional_properties": { k: v for k, v in response.css("").getall() },
-        }
+    def parse_additional_props(props_selector: scrapy.Selector):
+        pass
