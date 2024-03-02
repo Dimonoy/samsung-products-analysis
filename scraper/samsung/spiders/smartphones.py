@@ -52,11 +52,10 @@ class SmartphonesSpider(scrapy.Spider):
             "outlet_special_price": None,
             "coupon_discount_quantity": None,
             "coupon_discounted_price": None,
-            "currency": None,
         }
         extract_quantity = lambda pb: pb.css("dd span::text").get().strip()
 
-        for price_block in prices_selector.css("dl").getall():
+        for price_block in prices_selector.css("dl"):
             match price_block.css("dt::text").get().strip():
                 case "기준가":
                     standard_price = extract_quantity(price_block)
