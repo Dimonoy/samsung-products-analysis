@@ -16,35 +16,36 @@ class SmartphonesSpider(scrapy.Spider):
 
     def parse(self, response: scrapy.http.Response):
         for card in response.css("li.item"):
-            card_url_postfix = card.css("link-review").attrib["href"]
+            card_url_postfix = card.css("a.link-review").attrib["href"]
             card_url_postfix = card_url_postfix.rstrip("?focus=review")
             url = response.urljoin(card_url_postfix)
 
-            yield response.follow(
+            yield scrapy.Request(
                 url=url,
+                meta={ "playwright": True },
                 callback=self.parse_card,
             )
 
-    def parse_card(self, response: scrapy.http.Response):
-        item = None
-        prices_selector = response.css("itm-price")
-        props_selector = response.css("itm-option-choice")
+    async def parse_card(self, response: scrapy.http.Response):
+        prices_selector = response.css("div.itm-price")[0]
+        props_selector = response.css("div.itm-option-choice")[0]
+        self.log("Parsing a card .............................................")
 
         return {
-            "title": response.css("#goodsDetailNm::text").get(),
+            "title": response.css("h1#goodsDetailNm::text").get(),
             "model": response.css("div.itm-sku::text").get(),
             "category": self.name,
 
-            "benefit_price_validity_period": response.css().get(),
-            "coupon_discount_validity_period": response.css().get(),
+            # "benefit_price_validity_period": response.css().get(),
+            # "coupon_discount_validity_period": response.css().get(),
 
-            "rating": response.css("itm-sart-rating span::text").get(),
-            "quantity_of_reviews": response.css("itm-review-count::text").get(),
+            "rating": response.css("div.itm-sart-rating span::text").get(),
+            "quantity_of_reviews": response.css("a.itm-review-count::text").get(),
             **self.parse_prices(prices_selector),
             **self.parse_additional_props(props_selector),
         }
 
-    def parse_prices(prices_selector: scrapy.Selector):
+    def parse_prices(self, prices_selector: scrapy.Selector):
         prices = {
             "standard_price": None,
             "member_price": None,
