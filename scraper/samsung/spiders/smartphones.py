@@ -56,22 +56,35 @@ class SmartphonesSpider(scrapy.Spider):
         }
         extract_quantity = lambda pb: pb.css("dd span::text").get().strip()
 
-        for price_block in prices_selector.css("dl"):
-            match price_block.css("dt::text").get().strip():
+        for price_selector in prices_selector.css("dl"):
+            match price_selector.css("dt::text").get().strip():
                 case "기준가":
-                    standard_price = extract_quantity(price_block)
+                    standard_price = extract_quantity(price_selector)
                 case "회원가":
-                    member_price = extract_quantity(price_block)
+                    member_price = extract_quantity(price_selector)
                 case "혜택가":
-                    benefit_price = extract_quantity(price_block)
+                    benefit_price = extract_quantity(price_selector)
                 case "아울렛 특가":
-                    outlet_special_price = extract_quantity(price_block)
+                    outlet_special_price = extract_quantity(price_selector)
                 case "쿠폰 할인 금액":
-                    coupon_discount_quantity = extract_quantity(price_block)
+                    coupon_discount_quantity = extract_quantity(price_selector)
                 case "쿠폰 적용 예상가":
-                    coupon_discounted_price = extract_quantity(price_block)
+                    coupon_discounted_price = extract_quantity(price_selector)
                 case other:
                     self.logger.warn(f"'{other}' is not defined by the parser")
 
-    def parse_additional_props(props_selector: scrapy.Selector):
-        pass
+        self.log(prices)
+        return prices
+
+    def parse_additional_props(self, props_selector: scrapy.Selector):
+        props = {}
+
+        for prop_selector in props_selector.css("dl")[:-1]:
+            if prop_selector.attrib["class"] not in ("count-show-box", "itm-option-etc"):
+                prop_title = prop_selector.css("dt span::text").get()
+                prop_values = prop_selector.css("dd li span::text").getall()
+
+                props[prop_title] = prop_values
+
+        self.log(props)
+        return props
