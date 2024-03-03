@@ -8,31 +8,48 @@ class SmartphonesSpider(scrapy.Spider):
 
     def start_requests(self):
         for url in self.start_urls:
+            context = url.split("/")[-2]
             yield scrapy.Request(
                 url=url,
-                meta={ "playwright": True },
+                meta={
+                    "playwright": True,
+                    "playwright_include_page": True,
+                    "playwright_context": context,
+                },
             )
        
+    async def parse(self, response: scrapy.http.Response):
+        page = response.meta["playwright_page"]
 
-    def parse(self, response: scrapy.http.Response):
-        for card in response.css("li.item"):
-            card_url_postfix = card.css("a.link-review").attrib["href"]
+        await page.wait_for_selector("button#morePrd")
+
+        amount_of_sets = int(await page.locator("span#totalPageCount").text_content())
+
+        item_number = 11
+        for _ in range(amount_of_sets):
+            await page.wait_for_selector(f"li.item:nth-child({item_number})")
+            await page.evaluate("morePrd()")
+            item_number += 12
+
+        for n, card_url_locator in enumerate(await page.locator("li.item a.link-review").all(), start=1):
+            card_url_postfix = await card_url_locator.get_attribute("href")
             card_url_postfix = card_url_postfix.rstrip("?focus=review")
             url = response.urljoin(card_url_postfix)
+            item_context_number = (n % amount_of_sets) + 1
 
             yield scrapy.Request(
                 url=url,
-                meta={ "playwright": True },
+                meta={ "playwright": True, "playwright_context": f"item-{item_context_number}" },
                 callback=self.parse_card,
             )
 
     async def parse_card(self, response: scrapy.http.Response):
-        prices_selector = response.css("div.itm-price")[0]
-        props_selector = response.css("div.itm-option-choice")[0]
-        self.log("Parsing a card .............................................")
+        prices_selector = response.css("div.itm-price")
+        props_selector = response.css("div.itm-option-choice")
 
         return {
             "title": response.css("h1#goodsDetailNm::text").get(),
+            "url": response.url,
             "model": response.css("div.itm-sku::text").get(),
             "category": self.name,
 
@@ -73,7 +90,6 @@ class SmartphonesSpider(scrapy.Spider):
                 case other:
                     self.logger.warn(f"'{other}' is not defined by the parser")
 
-        self.log(prices)
         return prices
 
     def parse_additional_props(self, props_selector: scrapy.Selector):
@@ -86,5 +102,4 @@ class SmartphonesSpider(scrapy.Spider):
 
                 props[prop_title] = prop_values
 
-        self.log(props)
         return props
