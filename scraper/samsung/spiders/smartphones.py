@@ -4,7 +4,46 @@ import scrapy
 class SmartphonesSpider(scrapy.Spider):
     name = "smartphones"
     allowed_domains = ["www.samsung.com"]
-    start_urls = ["https://www.samsung.com/sec/smartphones/all-smartphones/"]
+    start_urls = [
+	    "https://www.samsung.com/sec/smartphones/all-smartphones/",
+	    "https://www.samsung.com/sec/tablets/all-tablets/",
+	    "https://www.samsung.com/sec/galaxybook/all-galaxybook/",
+	    "https://www.samsung.com/sec/watches/all-watches/",
+	    "https://www.samsung.com/sec/buds/all-buds/",
+	    "https://www.samsung.com/sec/mobile-accessories/all-mobile-accessories/",
+	    "https://www.samsung.com/sec/tvs/all-tvs/",
+	    "https://www.samsung.com/sec/lifestyletv/all-lifestyletv/",
+	    "https://www.samsung.com/sec/samsung-audio/all-samsung-audio/",
+	    "https://www.samsung.com/sec/harman-life-style-audio/all-harman-life-style-audio/",
+	    "https://www.samsung.com/sec/tv-accessories/all-tv-accessories/",
+	    "https://www.samsung.com/sec/refrigerators/all-refrigerators/",
+	    "https://www.samsung.com/sec/kimchi-refrigerators/all-kimchi-refrigerators/",
+	    "https://www.samsung.com/sec/dishwashers/all-dishwashers/",
+	    "https://www.samsung.com/sec/water-purifier/all-water-purifier/",
+	    "https://www.samsung.com/sec/electric-range/all-electric-range/",
+	    "https://www.samsung.com/sec/cooking-appliances/all-cooking-appliances/",
+	    "https://www.samsung.com/sec/micro-wave-ovens/all-micro-wave-ovens/",
+	    "https://www.samsung.com/sec/hood/all-hood/",
+	    "https://www.samsung.com/sec/kitchen-small-appliance/all-kitchen-small-appliance/",
+	    "https://www.samsung.com/sec/kitchen-accessories/all-kitchen-accessories/",
+	    "https://www.samsung.com/sec/washing-machines/all-washing-machines/",
+	    "https://www.samsung.com/sec/dryers/all-dryers/",
+	    "https://www.samsung.com/sec/airdresser/all-airdresser/",
+	    "https://www.samsung.com/sec/shoedresser/all-shoedresser/",
+	    "https://www.samsung.com/sec/air-conditioners/all-air-conditioners/",
+	    "https://www.samsung.com/sec/system-air-conditioners/all-system-air-conditioners/",
+	    "https://www.samsung.com/sec/air-cleaner/all-air-cleaner/",
+	    "https://www.samsung.com/sec/air-cleaner/all-air-cleaner/",
+	    "https://www.samsung.com/sec/small-appliances/all-small-appliances/",
+	    "https://www.samsung.com/sec/living-accessories/all-living-accessories/",
+	    "https://www.samsung.com/sec/desktop/all-desktop/",
+	    "https://www.samsung.com/sec/pc-accessories/all-pc-accessories/",
+	    "https://www.samsung.com/sec/monitors/all-monitors/",
+	    "https://www.samsung.com/sec/memory-storage/all-memory-storage/",
+	    "https://www.samsung.com/sec/memory-storage/all-memory-storage/",
+	    "https://www.samsung.com/sec/printer-supplies/all-printer-supplies/",
+	    "https://www.samsung.com/sec/smartthings-accessories/all-smartthings-accessories/",
+    ]
 
     def start_requests(self):
         for url in self.start_urls:
