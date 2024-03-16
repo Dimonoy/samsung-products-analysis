@@ -72,7 +72,7 @@ window_setup() {
 
     pane_setup $TMUX_WINDOW
 
-    tmux split-window -t $TMUX_WINDOW_INDEX -h -p 25
+    tmux split-window -t $TMUX_WINDOW_INDEX -h -p 20
 
     pane_setup $TMUX_WINDOW
 }
