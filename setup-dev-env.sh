@@ -8,6 +8,9 @@ TMUX_WINDOWS=($(ls -I LICENSE -I README.md -I requirements.txt -I setup-dev-env.
 TMUX_WINDOWS_SELECTED=()
 
 print_usage() {
+    local ORIG_IFS=$IFS
+    IFS=","
+
     cat << EOF
 A script to setup the development environment using tmux
 
@@ -17,8 +20,8 @@ USAGE:
 FLAGS:
     -h       Prints help information
     -e       Specifies a development environments separated by space and enclosed in quotes.
-             Following development environments available:
-               ${TMUX_WINDOWS[@]}
+             Following development environments are available:
+                 ${TMUX_WINDOWS[*]}
              Shortcuts can also be passed:
              'all', 'default' (no environments, empty DE setup)
 EXAMPLES:
@@ -27,6 +30,8 @@ EXAMPLES:
     $(basename $0) -h
     $(basename $0)
 EOF
+
+    IFS=$ORIG_IFS
 }
 
 arg_parse() {
