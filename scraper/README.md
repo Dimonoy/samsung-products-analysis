@@ -1,5 +1,5 @@
 # Samsung.com scraper
-The scraper utilizes "concealed" samsung.com REST API, which is used during the product catalog webpages loading.  
+The scraper utilizes a "concealed" samsung.com REST API, which is used during the product catalog webpages loading.  
 The key takeaways from the samsung.com API:
 - the Fetch/XHR request is performed by the client product catalog page and is unique;
 - the request parameter to specify the product category is called "product classification number" ([See the table below](#product-categories));
@@ -57,21 +57,22 @@ All the properties that the scraper collects and saves to the data storage.
 ### Common properties
 The properties that are common for each product category:
 
-- Title - the assigned name to the product
-- Model - the concrete model of the product
-- Item category - the product type
-- Standard price - the original price of the product
-- Member price - the price of the product under the condition of ordering the product from the samsung.com
-- Benefit price - the price with the temporary discount under the same condition as for the member price. Applied torwards the standard price
-- Benefit price validity period - the period of validity of the discount
-- Coupon discount quantity - the coupon discount in the currency. 
-- Coupon discount validity period - the period of validity of the coupon 
-- Price with coupon discount - the price with the coupon discount under the same condition as for the member price. Applied torwards standard price or the benefit price if the latter is presented
-- Outlet special price - the outlet price under the same condition as for member price. Applied torwards the standard price
-- Color - the color of the product
-- Rating - the 0 to 5 rating of the product
-- Quantity of reviews - the amount of feedbacks from the purchases
-- Additional properties - the additional properties of the product depending on the product category
+- _Title_ - the assigned name to the product
+- _Model_ - the model name of the product
+- _Model code_ - the model's code name
+- _Item category_ - the product type
+- _Standard price_ - the original price of the product
+- _Member price_ - the price of the product under the condition of ordering the product from the samsung.com
+- _Benefit price_ - the price with the temporary discount under the same condition as for the member price. Applied torwards the standard price
+- _Benefit price validity period_ - the period of validity of the discount
+- _Coupon discount quantity_ - the coupon discount in the currency. 
+- _Coupon discount validity period_ - the period of validity of the coupon 
+- _Price with coupon discount_ - the price with the coupon discount under the same condition as for the member price. Applied torwards standard price or the benefit price if the latter is presented
+- _Outlet special price_ - the outlet price under the same condition as for member price. Applied torwards the standard price
+- _Color_ - the color of the product
+- _Rating_ - the 0 to 5 rating of the product
+- _Quantity of reviews_ - the amount of feedbacks from the purchases
+- _Additional properties_ - the additional properties of the product depending on the product category
 
 ### Additional properties based on item category
 The properties that might diverse depending on the product category:
@@ -87,42 +88,28 @@ In order to get desired properties one should understand the properties from API
 ### Products price complication
 The product's prices are calculated from the API properties and then displayed on the webpage, which requires elaboration on what to take. Full product's JSON response can be found [here](#)
 There are in total {n} types of price combinations:
-- No price (sale price equals 0) `priceStr[1] = 00`
-- Standard price. Example: "623361|00|600000|600000". `priceStr[1] = 00`
-  if priceStr length == 4 and priceStr[2] == priceStr[3]
-- Standard price + Coupon discount amount + Estimated price with coupon applied. Example: "614288|00|319000|319000". `priceStr[1] = 00`
-  if priceStr length == 4 and priceStr[2] == priceStr[3] and (cpAllDcAmt != 0 or membershipPoint * 1000 != priceStr[4])
-- Standard price + Benefit price. Example: "613849|20|1598300|1598300|1443000" `priceStr[1] = 10`
-  if priceStr[1] == 1 and cpAllDcAmt == 0
-- Standard price + Member price. Example: "623531|00|11000|10600". `priceStr[1] = 00`
-  if priceStr length == 4 or priceStr[1] == 00
-- Standard price + Member price + Benefit price. Example: "622984|10|1490000|1445000|990000" `priceStr[1] = 10`
-  if priceStr[2] != priceStr[3] and priceStr[3] != priceStr[4] 
-- Standard price + Benefit price + Coupon discount amount + Estimated price with coupon applied. Example: "619251|10|4362000|4362000|4360000" `priceStr[1] = 10`
-  if priceStr[1] == 1 and cpAllDcAmt != 0
-- Standard price + Outlet specials. Example: "623048|10|3590000|3482000|2090000"
-  if
+- _No price_ (sale price equals 0). Condition: `if 'activatePhoneYn' exists or priceStr[2] == 0`
+- _Standard price_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3]`
+- _Standard price_ + _Coupon discount amount_ + _Estimated price with coupon applied_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3] and cpAllDcAmt != 0`
+- _Standard price_ + _Benefit price_. Condition: `if priceStr[1] != '00' and cpAllDcAmt == 0`
+- _Standard price_ + _Member price_. Condition: `if priceStr[1] == '00'`
+- _Standard price_ + _Member price_ + _Benefit price_. Condition: `if priceStr[2] != priceStr[3] and priceStr[3] != priceStr[4]`
+- _Standard price_ + _Benefit price_ + _Coupon discount amount_ + _Estimated price with coupon applied_. Condition: `if priceStr[1] != '00' and cpAllDcAmt != 0`
+- _Standard price_ + _Outlet specials_. Condition: `if outletFlgYn == True`
 
-NOTE!: priceStr[2] - Standard price, priceStr[3] - Member price, priceStr[4] - Benefit price
-NOTE!: in priceStr length of 4: priceStr[2] - Standard price, priceStr[3] - Member price. No benefit price
-NOTE!: priceStr length check is not reliable. I suggest compare equivalence
-NOTE!: priceStr[1] = 00 means priceStr length 4, priceStr[1] = 10 means priceStr length 5
-NOTE!: there phones carriers, that do not have price. They have special properties: `activatePhoneYn` and `activatePhonePriceVO` 
-
-TODO!: figure out about 'No price' and 'Outlet specials' items.
+NOTE!: `priceStr[2]` - Standard price, `priceStr[3]` - Member price, `priceStr[4]` - Benefit price or Outlet special
+NOTE!: `priceStr[0] == '00'` means that the length of the `priceStr` is 4. Otherwise, the `priceStr` length is 5.
+NOTE!: in the `priceStr` of the length 4: `priceStr[2]` - Standard price, `priceStr[3]` - Member price. No benefit price
+NOTE!: there are phones carriers, that do not have price. They have special properties: `activatePhoneYn` and `activatePhonePriceVO` 
+NOTE!: some products may have a price of 0. That means they are out of stock.
 
 Following API properties can be used to collect all the price combinations:
-- `priceStd` - text with prices separated by symbol `|`
+- `priceStr` - text with prices separated by symbol `|`
 - `salePrice` - final price
-- `membershipPoint` - [unncessary]
-- `cpAllDcAmt` - 
-- `bespokeMinimumPrice` - 
-- `bspkPrc1` - 
-- `bspkPrc2` - 
-- `bspkPrc3` - 
-- `bspkPrc4` - 
-- `bspkPrc5` - 
-
+- `cpAllDcAmt` - coupon discount amount
+- `outletFlgYn` - whether the outlet special price presented
+- `activatePhoneYn` - the phone carrier is present
+- `activatePhonePriceVO` - 
 
 ### Additional properties complication
 Each product has different combination of properties, but all of them always listed in the `goodsOptStr` API property. 
@@ -130,11 +117,11 @@ It contains text with additional properties separated by symbol `|`.
 
 ### Other API properties
 
-- `reviewGrade` - 
-- `reviewCount` - 
-- `stockQty` - 
-- `dlvrPckYn` - is package delivery available
-
+- `reviewGrade` - the average review grade (from 0.0 to 5.0)
+- `reviewCount` - the amount of reviews
+- `stockQty` - the current quantity of products
+- `mdlCode` - the displayed unique model of the product
+- `mdlNm` - the model name
 
 ## Appendix
 
