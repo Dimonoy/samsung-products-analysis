@@ -51,13 +51,22 @@ arg_parse() {
                 break
                 ;;
             \?)
-                echo "Invalid arguments."
+                echo "[ERROR] Invalid arguments."
                 print_usage
                 exit 2
                 ;;
         esac
     done
     shift $(( OPTIND - 1 ))
+
+    local ALL_POSSIBLE_TMUX_WINDOWS=(${TMUX_WINDOWS[@]} default all)
+    for workspace in ${TMUX_WINDOWS_SELECTED[@]}; do
+        if [[ ! "${ALL_POSSIBLE_TMUX_WINDOWS[@]}" =~ "$workspace" ]]; then
+            echo "[ERROR] No workspace '$workspace' available."
+            print_usage
+            exit 2
+        fi
+    done
 }
 
 pane_setup() {
