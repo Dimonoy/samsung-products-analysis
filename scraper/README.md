@@ -1,14 +1,17 @@
 # Samsung.com scraper
-The scraper utilizes a "concealed" samsung.com REST API, which is used during the product catalog webpages loading.  
-The key takeaways from the samsung.com API:
-- the Fetch/XHR request is performed by the client product catalog page and is unique;
-- the request parameter to specify the product category is called "product classification number" ([See the table below](#product-categories));
+The scraper utilizes the API endpoint, which is used by the samsung.com during the product
+catalog webpages loading.  
+The key characteristics of the API:
+- the Fetch/XHR request is performed by the client product catalog page;
+- the request parameter for specification of the product category is called a
+"product classification number" ([See the table below](#product-categories));
 - the response contains all the possible information for each product presented in the catalog;
 - the request is easily adjustable to receive the desired amount of items and category.
 
 ## Product categories
-There are in total 38 product categories presented on the https://www.samsung.com/sec/ (Korea) website. Product category names are taken 
-from the product catalog URLs to those product categories. Each product classification number was manually collected from each page through the devtool.
+There are in total 38 product categories presented on the https://www.samsung.com/sec/ (Korean).
+Product category names are taken from the product catalog URLs to those product categories.
+Each product classification number was manually collected from each page using "DevTools".
 
 | ID | Product category            | Product classification number | Korean name              |
 |----|-----------------------------|-------------------------------|--------------------------|
@@ -52,56 +55,55 @@ from the product catalog URLs to those product categories. Each product classifi
 | 38 | all-smartthings-accessories | 100024735                     | 스마트싱스 상품          |
 
 ## Properties parsed
-All the properties that the scraper collects and saves to the data storage.
+All the properties that the scraper collects and saves to the data storage are presented in this
+chapter.
 
-### Common properties
 The properties that are common for each product category:
 
-- _Title_ - the assigned name to the product
-- _Model_ - the model name of the product
-- _Model code_ - the model's code name
-- _Item category_ - the product type
-- _Standard price_ - the original price of the product
-- _Member price_ - the price of the product under the condition of ordering the product from the samsung.com
-- _Benefit price_ - the price with the temporary discount under the same condition as for the member price. Applied torwards the standard price
-- _Benefit price validity period_ - the period of validity of the discount
-- _Coupon discount quantity_ - the coupon discount in the currency. 
-- _Coupon discount validity period_ - the period of validity of the coupon 
-- _Price with coupon discount_ - the price with the coupon discount under the same condition as for the member price. Applied torwards standard price or the benefit price if the latter is presented
-- _Outlet special price_ - the outlet price under the same condition as for member price. Applied torwards the standard price
-- _Color_ - the color of the product
-- _Rating_ - the 0 to 5 rating of the product
-- _Quantity of reviews_ - the amount of feedbacks from the purchases
-- _Additional properties_ - the additional properties of the product depending on the product category
-
-### Additional properties based on item category
-The properties that might diverse depending on the product category:
-
-- Storage capacity - the data storage capacity of the product
-- Screen size - the screen resolution of the product
-- Size - the product's diagonal size
-- Option - the mount type of the product
+- _Title_ (`goodsNm`) - the assigned name to the product
+- _Model_ (`mdlNm`) - the model name of the product
+- _Model code_ (`mdlCode`) - the model's code name
+- _Link_ (`goodsDetailUrl`) - the URL to the product
+- _Item category_ (`compDispClsfEnNm`) - the product type
+- _Item classification number_ (`compDispClsfNo`) - the assigned by Samsung number for the
+product type
+- _Standard price_ (`priceStr[2]`) - the original price of the product
+- _Member price_ (`priceStr[3]`) - the price of the product under the condition of ordering
+the product from the samsung.com
+- _Benefit price_ (`priceStr[4]`) - the price with the temporary discount under the same
+condition as for the member price. Applied torwards the standard price
+- _Coupon discount_ (`cpAllDcAmt`) - the coupon discount in the currency. 
+- _Outlet special price_ (`priceStr[5]`) - the outlet price under the same condition as
+for member price. Applied torwards the standard price
+- _Rating_ (`reviewGrade`) - the 0 to 5 rating of the product
+- _Quantity of reviews_ (`reviewCount`) - the amount of feedbacks from the purchases
+- _Stock quantity_ (`stockQty`) - the quantity of the product available
+- _Additional properties_ (`goodsOptStr`) - the additional properties of the product depending on
+the product category. JSON of additional properties is scraped from this option.
+- _Date time_ (`datetime.now()`) - the date and time the product's records were scraped
 
 ## API description
-In order to get desired properties one should understand the properties from API that matches to your needs.
 
 ### Products price complication
-The product's prices are calculated from the API properties and then displayed on the webpage, which requires elaboration on what to take. Full product's JSON response can be found [here](#)
-There are in total {n} types of price combinations:
-- _No price_ (sale price equals 0). Condition: `if 'activatePhoneYn' exists or priceStr[2] == 0`
-- _Standard price_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3]`
-- _Standard price_ + _Coupon discount amount_ + _Estimated price with coupon applied_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3] and cpAllDcAmt != 0`
-- _Standard price_ + _Benefit price_. Condition: `if priceStr[1] != '00' and cpAllDcAmt == 0`
-- _Standard price_ + _Member price_. Condition: `if priceStr[1] == '00'`
-- _Standard price_ + _Member price_ + _Benefit price_. Condition: `if priceStr[2] != priceStr[3] and priceStr[3] != priceStr[4]`
-- _Standard price_ + _Benefit price_ + _Coupon discount amount_ + _Estimated price with coupon applied_. Condition: `if priceStr[1] != '00' and cpAllDcAmt != 0`
-- _Standard price_ + _Outlet specials_. Condition: `if outletFlgYn == True`
+The product's prices are calculated from the API properties and then displayed on the webpage,
+which requires an elaboration on what to take. Full product's JSON response can be found [here](#sample-response)
+There are in total 8 types of price combinations:
+1. _No price_ (sale price equals 0). Condition: `if 'activatePhoneYn' exists or priceStr[2] == 0`
+2. _Standard price_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3]`
+3. _Standard price_ + _Coupon discount amount_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3] and cpAllDcAmt != 0`
+4. _Standard price_ + _Benefit price_. Condition: `if priceStr[1] != '00' and cpAllDcAmt == 0`
+5. _Standard price_ + _Member price_. Condition: `if priceStr[1] == '00'`
+6. _Standard price_ + _Member price_ + _Benefit price_. Condition: `if priceStr[2] != priceStr[3] and priceStr[3] != priceStr[4]`
+7. _Standard price_ + _Benefit price_ + _Coupon discount amount_. Condition: `if priceStr[1] != '00' and cpAllDcAmt != 0`
+8. _Standard price_ + _Outlet specials_. Condition: `if outletFlgYn == True`
 
-NOTE!: `priceStr[2]` - Standard price, `priceStr[3]` - Member price, `priceStr[4]` - Benefit price or Outlet special
-NOTE!: `priceStr[0] == '00'` means that the length of the `priceStr` is 4. Otherwise, the `priceStr` length is 5.
-NOTE!: in the `priceStr` of the length 4: `priceStr[2]` - Standard price, `priceStr[3]` - Member price. No benefit price
-NOTE!: there are phones carriers, that do not have price. They have special properties: `activatePhoneYn` and `activatePhonePriceVO` 
-NOTE!: some products may have a price of 0. That means they are out of stock.
+> Notes
+>
+> The variable `priceStr[2]` - Standard price, `priceStr[3]` - Member price, `priceStr[4]` - Benefit price or Outlet special
+> The variable `priceStr[0] == '00'` means that the length of the `priceStr` is 4. Otherwise, the `priceStr` length is 5.
+> In the `priceStr` of the length 4: `priceStr[2]` - Standard price, `priceStr[3]` - Member price. No benefit price
+> There are phones carriers, that do not have price. They have special properties: `activatePhoneYn` and `activatePhonePriceVO` 
+> Some products may have a price of 0. That means they are out of stock.
 
 Following API properties can be used to collect all the price combinations:
 - `priceStr` - text with prices separated by symbol `|`
@@ -109,23 +111,11 @@ Following API properties can be used to collect all the price combinations:
 - `cpAllDcAmt` - coupon discount amount
 - `outletFlgYn` - whether the outlet special price presented
 - `activatePhoneYn` - the phone carrier is present
-- `activatePhonePriceVO` - 
-
-### Additional properties complication
-Each product has different combination of properties, but all of them always listed in the `goodsOptStr` API property. 
-It contains text with additional properties separated by symbol `|`.
-
-### Other API properties
-
-- `reviewGrade` - the average review grade (from 0.0 to 5.0)
-- `reviewCount` - the amount of reviews
-- `stockQty` - the current quantity of products
-- `mdlCode` - the displayed unique model of the product
-- `mdlNm` - the model name
+- `activatePhonePriceVO` - the phone carrier additional information
 
 ## Appendix
 
-### Full product's JSON response
+### Sample response
 ```json
 {
     "sysRegrNo": null,
