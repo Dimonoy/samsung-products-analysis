@@ -90,12 +90,11 @@ which requires an elaboration on what to take. Full product's JSON response can 
 There are in total 8 types of price combinations:
 1. _No price_ (sale price equals 0). Condition: `if 'activatePhoneYn' exists or priceStr[2] == 0`
 2. _Standard price_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3]`
-3. _Standard price_ + _Coupon discount amount_. Condition: `if priceStr[1] == '00' and priceStr[2] == priceStr[3] and cpAllDcAmt != 0`
-4. _Standard price_ + _Benefit price_. Condition: `if priceStr[1] != '00' and cpAllDcAmt == 0`
-5. _Standard price_ + _Member price_. Condition: `if priceStr[1] == '00'`
-6. _Standard price_ + _Member price_ + _Benefit price_. Condition: `if priceStr[2] != priceStr[3] and priceStr[3] != priceStr[4]`
-7. _Standard price_ + _Benefit price_ + _Coupon discount amount_. Condition: `if priceStr[1] != '00' and cpAllDcAmt != 0`
-8. _Standard price_ + _Outlet specials_. Condition: `if outletFlgYn == True`
+3. _Standard price_. Condition: `if priceStr[1] != '00' and priceStr[2] == priceStr[3] and priceStr[3] == priceStr[4]`
+4. _Standard price_ + _Member price_. Condition: `if priceStr[1] == '00' and priceStr[2] != priceStr[3]`
+5. _Standard price_ + _Benefit price_. Condition: `if priceStr[1] != '00' and priceStr[2] == priceStr[3] and priceStr[3] != priceStr[4]`
+6. _Standard price_ + _Member price_ + _Benefit price_. Condition: `if priceStr[1] != '00' and priceStr[2] != priceStr[3] and priceStr[3] != priceStr[4]`
+7. _Standard price_ + _Outlet specials_. Condition: `if outletFlgYn == "Y"`
 
 > Notes
 >
