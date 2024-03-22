@@ -2,7 +2,7 @@ import scrapy
 import json
 
 from datetime import datetime
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Literal
 
 
@@ -35,6 +35,7 @@ class SamsungSpider(scrapy.Spider):
 
     def start_requests(self):
         from scrapy.utils.url import add_or_replace_parameters
+        from dataclasses import asdict
 
         for classification_number in CLASSIFICATION_NUMBERS:
             parameters = URLEndpointParameters(dispClsfNo=classification_number)
