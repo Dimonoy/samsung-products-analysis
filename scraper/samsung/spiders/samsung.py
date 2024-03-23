@@ -21,7 +21,6 @@ CLASSIFICATION_NUMBERS = (
 )
 URL_ENDPOINT = "https://www.samsung.com/sec/pf/goodsList"
 URL_PREFIX = "https://www.samsung.com/sec/"
-DATETIME_FORMAT = "%Y/%d/%m %H:%M:%S"
 
 
 @dataclass(eq=False)
@@ -90,7 +89,7 @@ class SamsungSpider(scrapy.Spider):
             item_loader.add_value("stock_quantity",
                                   item.get("stockQty"),)
             item_loader.add_value("datetime",
-                                  datetime.now().strftime(DATETIME_FORMAT))
+                                  datetime.now().isoformat())
             item_loader.add_value("coupon_discount",
                                   item.get("cpAllDcAmt"))
             item_loader.add_value("additional_properties",
