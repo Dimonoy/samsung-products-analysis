@@ -10,7 +10,7 @@ The MySQL database instance is hosted on a local Docker container that consists 
 - Data mount - mount path to the external drive to store tablespaces and backups
 - MySQL volume - contains mysql system schema to instantiate the same mysql setting accross different environments
 
-The data then can be extracted based on MySQL features and user's preferences.
+The data then can be extracted based on a user's preferences.
 
 ## Appendix
 
