@@ -1,10 +1,8 @@
-SET @data_path = "/mnt/e/Data/samsung_ecom/products.ibd";
-
-CREATE DATABASE samsung_ecom;
+CREATE DATABASE IF NOT EXISTS samsung_ecom;
 USE samsung_ecom;
 
 CREATE TABLESPACE products_tbsp
-    ADD DATAFILE @data_path
+    ADD DATAFILE '/samsung_ecom/products.ibd'
     FILE_BLOCK_SIZE=16384
     ENGINE=InnoDB;
     
