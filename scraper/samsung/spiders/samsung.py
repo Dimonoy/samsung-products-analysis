@@ -86,11 +86,11 @@ class SamsungSpider(scrapy.Spider):
                                   item.get("compDispClsfNo"))
             item_loader.add_value("rating",
                                   item.get("reviewGrade"))
-            item_loader.add_value("reviews_quantity",
+            item_loader.add_value("quantity_of_reviews",
                                   item.get("reviewCount"))
             item_loader.add_value("stock_quantity",
                                   item.get("stockQty"),)
-            item_loader.add_value("datetime",
+            item_loader.add_value("date_time_collected",
                                   datetime.now().isoformat())
             item_loader.add_value("coupon_discount",
                                   item.get("cpAllDcAmt"))
