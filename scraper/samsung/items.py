@@ -3,13 +3,14 @@ import json
 
 from typing import Literal
 from typing_extensions import Self
+from itemloaders.processors import TakeFirst
 
 
 class PricesItem(scrapy.Item):
-    standard = scrapy.Field()
-    member = scrapy.Field()
-    benefit = scrapy.Field()
-    outlet_special = scrapy.Field()
+    standard = scrapy.Field(output_processor=TakeFirst())
+    member = scrapy.Field(output_processor=TakeFirst())
+    benefit = scrapy.Field(output_processor=TakeFirst())
+    outlet_special = scrapy.Field(output_processor=TakeFirst())
 
     def get_defaults() -> Self:
         return PricesItem(
@@ -81,22 +82,31 @@ class Deserialize:
             else:
                 add_props_item[prop_key] = [prop_value]
 
-        return add_props_item
+        return json.dumps(add_props_item)
 
-    
+
 class SamsungProductItem(scrapy.Item):
-    title = scrapy.Field()
-    model = scrapy.Field()
-    model_code = scrapy.Field()
-    link = scrapy.Field()
-    item_category = scrapy.Field()
-    item_classification_number = scrapy.Field()
-    rating = scrapy.Field()
-    reviews_quantity = scrapy.Field()
-    stock_quantity = scrapy.Field()
-    datetime = scrapy.Field()
-    coupon_discount = scrapy.Field()
-    prices = scrapy.Field(input_processor=Deserialize(target='prices'))
-    additional_properties = scrapy.Field(
-        input_processor=Deserialize(target='add_props')
+    title = scrapy.Field(output_processor=TakeFirst())
+    model = scrapy.Field(output_processor=TakeFirst())
+    model_code = scrapy.Field(output_processor=TakeFirst())
+    link = scrapy.Field(output_processor=TakeFirst())
+    item_category = scrapy.Field(output_processor=TakeFirst())
+    item_classification_number = scrapy.Field(output_processor=TakeFirst())
+    rating = scrapy.Field(output_processor=TakeFirst())
+    quantity_of_reviews = scrapy.Field(output_processor=TakeFirst())
+    stock_quantity = scrapy.Field(output_processor=TakeFirst())
+    date_time_collected = scrapy.Field(output_processor=TakeFirst())
+    coupon_discount = scrapy.Field(output_processor=TakeFirst())
+    prices = scrapy.Field(
+        input_processor=Deserialize(target='prices'),
+        output_processor=TakeFirst(),
     )
+    additional_properties = scrapy.Field(
+        input_processor=Deserialize(target='add_props'),
+        output_processor=TakeFirst(),
+    )
+
+    standard_price = scrapy.Field(output_processor=TakeFirst())
+    member_price = scrapy.Field(output_processor=TakeFirst())
+    benefit_price = scrapy.Field(output_processor=TakeFirst())
+    outlet_special_price = scrapy.Field(output_processor=TakeFirst())
