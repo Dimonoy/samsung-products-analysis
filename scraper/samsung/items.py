@@ -32,11 +32,14 @@ class Deserialize:
 
     def __call__(self, item_str: list[str | None]) -> None:
         item_str = item_str[0]
+        result = None
 
         if self.target == "prices":
-            self.prices_from_str(item_str)
+            result = self.prices_from_str(item_str)
         if self.target == "add_props":
-            self.add_props_from_str(item_str)
+            result = self.add_props_from_str(item_str)
+
+        return result
 
     @staticmethod
     def prices_from_str(price_str: str) -> dict[str, int]:
@@ -47,7 +50,7 @@ class Deserialize:
             prices[i] = int(price) if price.isdigit() else price
 
         if prices[-1] == "activatePhoneY" or prices[2] == 0:
-            return prices_item
+            return dict(prices_item)
 
         prices_item["standard"] = prices[2]
 
