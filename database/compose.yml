@@ -3,7 +3,7 @@ services:
     image: mysql:8.3.0
     restart: always
     volumes:
-      - samsung_db:/var/lib/mysql
+      - samsung:/var/lib/mysql
       - /mnt/e/Data/samsung_ecom:/samsung_ecom
       - ./database-init.sql:/docker-entrypoint-initdb.d/database-init.sql:ro
     environment:
@@ -27,4 +27,4 @@ secrets:
     file: mysql_user_password_secret.txt
 
 volumes:
-  samsung_db:
+  samsung:
