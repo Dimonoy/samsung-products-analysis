@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS samsung_ecom;
+ALTER DATABASE samsung_ecom CHARACTER SET euckr;
 USE samsung_ecom;
 
 CREATE TABLESPACE products_tbsp
@@ -22,9 +23,9 @@ CREATE TABLE products(
     outlet_special_price INT UNSIGNED,
     rating FLOAT NOT NULL,
     quantity_of_reviews MEDIUMINT UNSIGNED NOT NULL,
-    stock_quantity SMALLINT UNSIGNED NOT NULL,
+    stock_quantity MEDIUMINT UNSIGNED NOT NULL,
     additional_properties JSON,
     date_time_collected TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB, CHARACTER SET utf8mb4, ROW_FORMAT=COMPACT, TABLESPACE products_tbsp;
+) ENGINE=InnoDB, CHARACTER SET euckr, ROW_FORMAT=COMPACT, TABLESPACE products_tbsp;
