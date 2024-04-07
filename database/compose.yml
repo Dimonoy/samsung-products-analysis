@@ -16,11 +16,9 @@ services:
       - mysql_user_password
     ports:
       - 3306:3306
-    # command: --innodb_directories="/samsung_ecom" && mysql -u root -p < database-init.sql
     command: >
       --innodb_directories="/samsung_ecom"
       --default-authentication-plugin=caching_sha2_password
-    # command: mysql -u root -p < database-init.sql
 
 secrets:
   mysql_root_password:
