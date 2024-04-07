@@ -23,7 +23,7 @@ CREATE TABLE products(
     rating FLOAT NOT NULL,
     quantity_of_reviews MEDIUMINT UNSIGNED NOT NULL,
     stock_quantity SMALLINT UNSIGNED NOT NULL,
-    addition_properties JSON,
+    additional_properties JSON,
     date_time_collected TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
