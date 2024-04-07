@@ -19,7 +19,7 @@ services:
     # command: --innodb_directories="/samsung_ecom" && mysql -u root -p < database-init.sql
     command: >
       --innodb_directories="/samsung_ecom"
-      --default-authentication-plugin=mysql_native_password
+      --default-authentication-plugin=caching_sha2_password
     # command: mysql -u root -p < database-init.sql
 
 secrets:
