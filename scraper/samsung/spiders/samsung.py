@@ -60,13 +60,15 @@ class SamsungSpider(scrapy.Spider):
             prices = item.get("priceStr")
 
             if item.get("activatePhoneYn") == "Y":
-                item_loader.add_value("prices",
-                                      "|".join(item.get("priceStr").split("|")
-                                      + ["activatePhoneY"]))
+                item_loader.add_value(
+                    "prices",
+                    "|".join(item.get("priceStr").split + ["activatePhoneY"])
+                )
             elif item.get("outletFlgYn") == "Y":
-                item_loader.add_value("prices",
-                                      "|".join(prices.split("|")
-                                      + ["outletFlgY"]))
+                item_loader.add_value(
+                    "prices",
+                    "|".join(prices.split("|") + ["outletFlgY"])
+                )
 
             item_loader.add_value("prices",
                                   prices)
