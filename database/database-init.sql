@@ -7,7 +7,7 @@ CREATE TABLESPACE products_tbsp
     FILE_BLOCK_SIZE=16384
     ENGINE=InnoDB;
     
-# Overall storage for a single record: 893 bytes
+# Overall storage for a single record: 894 bytes
 CREATE TABLE products(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
