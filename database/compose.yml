@@ -4,8 +4,8 @@ services:
     restart: always
     volumes:
       - samsung:/var/lib/mysql
-      - /mnt/e/Data/samsung_ecom:/samsung_ecom
-      - ./database-init.sql:/docker-entrypoint-initdb.d/database-init.sql:ro
+      - ${HOST_DATA_DIR}:/samsung_ecom
+      - ./${SQL_FILE}:/docker-entrypoint-initdb.d/database-init.sql:ro
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       MYSQL_DATABASE: samsung_ecom
