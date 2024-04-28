@@ -1,14 +1,9 @@
 CREATE DATABASE IF NOT EXISTS samsung_ecom;
 ALTER DATABASE samsung_ecom CHARACTER SET euckr;
 USE samsung_ecom;
-
-CREATE TABLESPACE products_tbsp
-    ADD DATAFILE '/samsung_ecom/products.ibd'
-    FILE_BLOCK_SIZE=16384
-    ENGINE=InnoDB;
-    
+   
 # Overall storage for a single record: 894 bytes
-CREATE TABLE products(
+CREATE TABLE IF NOT EXISTS products(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     model VARCHAR(15) NOT NULL,
@@ -28,4 +23,4 @@ CREATE TABLE products(
     date_time_collected TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB, CHARACTER SET euckr, ROW_FORMAT=COMPACT, TABLESPACE products_tbsp;
+) ENGINE=InnoDB, CHARACTER SET euckr, ROW_FORMAT=COMPACT, TABLESPACE products_tablespace;
