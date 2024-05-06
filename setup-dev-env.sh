@@ -74,6 +74,7 @@ pane_setup() {
 
     tmux send-keys "[ -d venv ] && source venv/bin/activate" C-m
     tmux send-keys "cd $WORKDIR" C-m
+    tmux send-keys "[ -e .env ] && source .env" C-m
     tmux send-keys "clear" C-m
 }
 
