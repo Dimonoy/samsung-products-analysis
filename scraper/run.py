@@ -26,3 +26,8 @@ if __name__ == '__main__':
     process.start()
 
     diagnose_results_after: str = diagnose()
+
+    print("Before:\n{}\n---\nAfter:\n{}".format(
+        diagnose_results_before,
+        diagnose_results_after,
+    ))
